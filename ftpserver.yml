@@ -1,0 +1,21 @@
+- name: Install and configure FTP server
+  hosts: web_servers
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+    - name: Install vsftpd
+      apt:
+        name: vsftpd
+        state: present
+    - name: Configure vsftpd
+      template:
+        src: vsftpd.conf.j2
+        dest: /etc/vsftpd.conf
+  handlers:
+    - name: Restart vsftpd
+      service:
+        name: vsftpd
+        state: restarted
+        enabled: yes
